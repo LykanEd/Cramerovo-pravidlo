@@ -8,7 +8,7 @@ def swap_rows(array, row1, row2):
     array[[row1, row2]] = array[[row2, row1]]
 
 
-def get_nonzero_column(array, array2, row_n, col_n):
+def get_nonzero_column(array, row_n, col_n):
     """
     Funkce zkontroluje jestli na pozici array[row_n, col_n] je nenulove cislo,
     pokud neni, pokusi se najit nenulove cislo v danem sloupci na nejakem dalsim
@@ -19,10 +19,9 @@ def get_nonzero_column(array, array2, row_n, col_n):
     else:
         for i in np.arange(row_n+1, array.shape[0]):
             if array[i, col_n] != 0:
-                swap_rows(array, array2, row_n, i)
+                swap_rows(array, row_n, i)
                 return 0
         print("Matice neni regularni.")
-        exit()
         return -1
 
 def nacti_matici(n, file):
