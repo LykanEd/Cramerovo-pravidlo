@@ -1,4 +1,5 @@
 import numpy as np
+import sys
 
 
 def swap_rows(array, row1, row2):
@@ -42,9 +43,11 @@ def nacti_matici(file):
 def preved_stupnovity_tvar(matice1):
     # prevod do horniho stupnoviteho tvaru
     for i in np.arange(0, matice1.shape[0]):
-        if get_nonzero_column(matice1, matice2, i, i) != -1:
+        if get_nonzero_column(matice1, i, i) != -1:
             for j in np.arange(i+1, matice1.shape[0]):
                 matice1[j] = matice1[j] - matice1[i]*matice1[j, i]/matice1[i, i]
+        else:
+            return -1
     matice1[-1] = matice1[-1]/matice1[-1, -1]
 
 
@@ -53,13 +56,24 @@ def preved_stupnovity_tvar(matice1):
         for j in np.arange(0, i):
             matice1[j] = matice1[j] - matice1[i]*matice1[j, i]/matice1[i, i]
         matice1[i] = matice1[i]/matice1[i, i]
-    return(matice1)
+    return matice1
 
-print("Upravena matice 1: \n")
-print(matice1)
+def main(file):
+    matice = nacti_matici(file)
+    matice = preved_stupnovity_tvar(matice)
+    if isinstance(matice,int):
+        return -1
+    print("Upravena matice 1: \n")
+    print(matice)
+    return 0
 
 
 if __name__ == '__main__':
-        # Zadani radu matice a vstupniho souboru
-        n = int(input("Zadejte rad prvni matice: "))
-        file = input("Zadejte jméno souboru s maticemi (vcetne pripony): ")
+    files = sys.argv[1:]
+    if len(files) == 0:
+        files.append(input("Zadejte jméno souboru s maticemi (vcetne pripony): "))
+    for file in files:
+        check = main(file)
+        if check != 0:
+            print(f"Pri nacitani nebo zpracovani souboru {file} doslo k chybe.")
+            exit()
