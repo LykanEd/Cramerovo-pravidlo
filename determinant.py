@@ -55,14 +55,13 @@ def preved_stupnovity_tvar(matice1, swap_count):
             matice1[j] = matice1[j] - matice1[i]*matice1[j, i]/matice1[i, i]
     return matice1
 
-def main(matice = [], file=None):
+def main(matice):
     """
     Pokusi se nacist matici v souboru file a vrati jeji determinant.
     """
-    if matice == [] and file != None:
+    if not isinstance(matice, np.ndarray):
         matice = nacti_matici(file)
-    if matice == [] and file == None:
-        return("error")
+    print(matice)
     swap_count = 0
     try:
         matice = preved_stupnovity_tvar(matice, swap_count)
@@ -75,7 +74,6 @@ def main(matice = [], file=None):
         determinant*=matice[i,i]
     # změna znaménka za každé prohození radku
     determinant = (-1)**(swap_count)*determinant
-    print(matice)
     return(determinant)
 
 
@@ -84,7 +82,7 @@ if __name__ == '__main__':
     if len(files) == 0:
         files.append(input("Zadejte jméno souboru s maticemi (vcetne pripony): "))
     for file in files:
-        determinant = main(file=file)
+        determinant = main(file)
         if isinstance(determinant,str):
             print(f"Pri nacitani nebo zpracovani souboru {file} doslo k chybe.")
         else:

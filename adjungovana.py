@@ -25,17 +25,15 @@ def alg_doplnek(matice, i, j):
     if not (0 <= i <= matice.shape[0] and 0 <= i <= matice.shape[0]):
         raise Error("Spatne zadane indexy radku a sloupcu.")
     matice_vysrtnuto = np.delete(np.delete(matice, i, 0), j, 1)
-    determinant_vyskrtnuto = determinant.main(matice=matice_vysrtnuto)
+    determinant_vyskrtnuto = determinant.main(matice_vysrtnuto)
     return((-1)**(i+j)*determinant_vyskrtnuto)
 
-def main(matice = [], file=None):
+def main(matice):
     """
     Pro zadanou matici / matici nactenou ze souboru file vrati adjungovanou matici.
     """
-    if matice == [] and file != None:
+    if not isinstance(matice, np.ndarray):
         matice = nacti_matici(file)
-    if matice == [] and file == None:
-        return("error")
     adjungovana_matice = np.empty(dtype="f", shape=[0, matice.shape[0]])
     for i in np.arange(matice.shape[0]):
         radek = np.array([], dtype="f")
@@ -44,16 +42,14 @@ def main(matice = [], file=None):
         adjungovana_matice = np.append(adjungovana_matice, [radek], axis=0)
     return(adjungovana_matice)
 
-def inverzni_z_adj(matice=[], file=None):
+def inverzni_z_adj(matice):
         """
         Pro zadanou matici vrati inverzni matici vypoctenou pomoci adjungovane matice.
         """
-        if matice == [] and file != None:
+        if not isinstance(matice, np.ndarray):
             matice = nacti_matici(file)
-        if matice == [] and file == None:
-            raise Error("Spatne zadane parametry funkce.")
-        adjungovana_matice = main(matice=matice)
-        det = determinant.main(matice=matice)
+        adjungovana_matice = main(matice)
+        det = determinant.main(matice)
         if det != 0:
             inverzni_matice = adjungovana_matice/np.full(adjungovana_matice.shape[0], det)
         else:
@@ -65,7 +61,7 @@ if __name__ == '__main__':
     if len(files) == 0:
         files.append(input("Zadejte jméno souboru s maticemi (vcetne pripony): "))
     for file in files:
-        inverzni_matice, adjungovana_matice = inverzni_z_adj(file=file)
+        inverzni_matice, adjungovana_matice = inverzni_z_adj(file)
         print(f"Adjungovana matice k matici v souboru {file}:")
         print(adjungovana_matice)
         if isinstance(inverzni_matice, int):
