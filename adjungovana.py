@@ -53,9 +53,11 @@ def inverzni_z_adj(matice=[], file=None):
         if matice == [] and file == None:
             raise Error("Spatne zadane parametry funkce.")
         adjungovana_matice = main(matice=matice)
-        determinant = determinant.main(matice=matice)
-        if True:
-            inverzni_matice = adjungovana_matice/np.full(adjungovana_matice.shape[0], determinant)
+        det = determinant.main(matice=matice)
+        if det != 0:
+            inverzni_matice = adjungovana_matice/np.full(adjungovana_matice.shape[0], det)
+        else:
+            inverzni_matice = 0
         return(inverzni_matice, adjungovana_matice)
 
 if __name__ == '__main__':
@@ -63,8 +65,11 @@ if __name__ == '__main__':
     if len(files) == 0:
         files.append(input("Zadejte jméno souboru s maticemi (vcetne pripony): "))
     for file in files:
-        adjungovana_matice, inverzni_matice = inverzni_z_adj(file=file)
+        inverzni_matice, adjungovana_matice = inverzni_z_adj(file=file)
         print(f"Adjungovana matice k matici v souboru {file}:")
         print(adjungovana_matice)
-        print(f"Inverzni matice:")
-        print(inverzni_matice)
+        if isinstance(inverzni_matice, int):
+            print("Matice je singularni, nema inverzni matici.")
+        else:
+            print(f"Inverzni matice:")
+            print(inverzni_matice)
