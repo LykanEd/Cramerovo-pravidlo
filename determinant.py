@@ -23,6 +23,7 @@ def get_nonzero_column(array, row_n, col_n, swap_count):
             if array[i, col_n] != 0:
                 swap_rows(array, row_n, i)
                 swap_count+=1
+                return
         raise NeregularniMaticeError
 
 def nacti_matici(file):
