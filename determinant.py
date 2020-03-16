@@ -1,6 +1,6 @@
 import numpy as np
 import sys
-import errors
+from errors import *
 
 
 def swap_rows(array, row1, row2):
@@ -17,6 +17,7 @@ def get_nonzero_column(array, row_n, col_n, swap_count):
     radku. Pokud nenajde nenulove cislo, spusti NeregularniMaticeError.
     """
     if array[row_n, col_n] != 0:
+        return
     else:
         for i in np.arange(row_n+1, array.shape[0]):
             if array[i, col_n] != 0:
