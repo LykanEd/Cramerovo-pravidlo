@@ -9,11 +9,13 @@ def swap_rows(array, row1, row2):
     array[[row1, row2]] = array[[row2, row1]]
 
 
-def get_nonzero_column(array, row_n, col_n):
+def get_nonzero_column(array, row_n, col_n, swap_count):
     """
     Funkce zkontroluje jestli na pozici array[row_n, col_n] je nenulove cislo,
     pokud neni, pokusi se najit nenulove cislo v danem sloupci na nejakem dalsim
-    radku. Pokud nenajde, vypise, ze matice neni regularni a ukonci program.
+    radku. Pokud na pozici array[row_n, col_n], vrati 0, pokud neni ale najde
+    jine nenulove v danem sloupci, vrati 0 a zvysi swap_count. Pokud nenajde,
+    vrati 0.
     """
     if array[row_n, col_n] != 0:
         return 0
@@ -21,11 +23,16 @@ def get_nonzero_column(array, row_n, col_n):
         for i in np.arange(row_n+1, array.shape[0]):
             if array[i, col_n] != 0:
                 swap_rows(array, row_n, i)
+                swap_count+=1
                 return 0
         print("Matice neni regularni.")
         return -1
 
 def nacti_matici(file):
+    """
+    Funkce nacte matici ze souboru file (jednotlive členy matice na radku musi
+    byt oddeleny carkou. Zkontroluje tvar matice a vrati jako np array.)
+    """
     try:
         # nacteni matic ze souboru
         matice1 = np.loadtxt(file, dtype='f', delimiter=',')
@@ -40,32 +47,38 @@ def nacti_matici(file):
         exit()
     return(matice1)
 
-def preved_stupnovity_tvar(matice1):
+def preved_stupnovity_tvar(matice1, swap_count):
+    """
+    Funkce zkontroluje jestli na pozici array[row_n, col_n] je nenulove cislo,
+    pokud neni, pokusi se najit nenulove cislo v danem sloupci na nejakem dalsim
+    radku. Pokud nenajde, vypise, ze matice neni regularni a ukonci program.
+    """
     # prevod do horniho stupnoviteho tvaru
     for i in np.arange(0, matice1.shape[0]):
-        if get_nonzero_column(matice1, i, i) != -1:
+        if get_nonzero_column(matice1, i, i, swap_count) != -1:
             for j in np.arange(i+1, matice1.shape[0]):
                 matice1[j] = matice1[j] - matice1[i]*matice1[j, i]/matice1[i, i]
         else:
             return -1
-    matice1[-1] = matice1[-1]/matice1[-1, -1]
-
-
-    # prevod na jednotkovou matici
-    for i in np.arange(matice1.shape[0]-1, -1, -1):
-        for j in np.arange(0, i):
-            matice1[j] = matice1[j] - matice1[i]*matice1[j, i]/matice1[i, i]
-        matice1[i] = matice1[i]/matice1[i, i]
     return matice1
 
 def main(file):
+    """
+    Pokusi se nacist matici v souboru file a vrati jeji determinant. Pokud
+    nacteni/zpracovani matice probehne spatne, string 'error'.
+    """
     matice = nacti_matici(file)
-    matice = preved_stupnovity_tvar(matice)
+    swap_count = 0
+    matice = preved_stupnovity_tvar(matice, swap_count)
     if isinstance(matice,int):
-        return -1
-    print("Upravena matice 1: \n")
+        return("error")
+    determinant = 1
+    for i in np.arange(0,matice.shape[0]):
+        determinant*=matice[i,i]
+    # změna znaménka za každé prohození radku
+    determinant = (-1)**(swap_count)*determinant
     print(matice)
-    return 0
+    return(determinant)
 
 
 if __name__ == '__main__':
@@ -73,7 +86,8 @@ if __name__ == '__main__':
     if len(files) == 0:
         files.append(input("Zadejte jméno souboru s maticemi (vcetne pripony): "))
     for file in files:
-        check = main(file)
-        if check != 0:
+        determinant = main(file)
+        if isinstance(determinant,str):
             print(f"Pri nacitani nebo zpracovani souboru {file} doslo k chybe.")
-            exit()
+        else:
+            print(f"Determinant matice v souboru {file} je: {determinant}.\n")
