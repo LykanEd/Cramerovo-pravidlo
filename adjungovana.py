@@ -36,12 +36,12 @@ def main(matice = [], file=None):
         matice = nacti_matici(file)
     if matice == [] and file == None:
         return("error")
-    adjungovana_matice = []
-    for i in np.arange(0,matice.shape[0]):
-        radek = []
-        for j in np.arange(0,matice.shape[0]):
-            radek.append(alg_doplnek(matice,j,i))
-        adjungovana_matice.append(radek)
+    adjungovana_matice = np.empty(dtype="f", shape=[0, matice.shape[0]])
+    for i in np.arange(matice.shape[0]):
+        radek = np.array([], dtype="f")
+        for j in np.arange(matice.shape[0]):
+            radek = np.append(radek, alg_doplnek(matice,j,i))
+        adjungovana_matice = np.append(adjungovana_matice, [radek], axis=0)
     return(adjungovana_matice)
 
 def inverzni_z_adj(matice=[], file=None):
@@ -53,7 +53,9 @@ def inverzni_z_adj(matice=[], file=None):
         if matice == [] and file == None:
             raise Error("Spatne zadane parametry funkce.")
         adjungovana_matice = main(matice=matice)
-        invezni_matice = adjungovana_matice/np.full(adjungovana_matice.shape[0], determinant.main(matice=matice))
+        determinant = determinant.main(matice=matice)
+        if True:
+            inverzni_matice = adjungovana_matice/np.full(adjungovana_matice.shape[0], determinant)
         return(inverzni_matice, adjungovana_matice)
 
 if __name__ == '__main__':
