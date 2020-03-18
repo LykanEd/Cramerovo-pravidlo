@@ -23,8 +23,13 @@ def nacti_matici(file):
     return(matice1)
 
 def alg_doplnek(matice, i, j):
+    """
+    Funkce vrati algebraicky doplnek zadane matici o indexech i,j.
+    """
+    # kontrola platnosti indexu
     if not (0 <= i <= matice.shape[0] and 0 <= i <= matice.shape[0]):
         raise Error("Spatne zadane indexy radku a sloupcu.")
+    # matice a jeji determinant po vyskrtnuti i radku a j sloupce
     matice_vysrtnuto = np.delete(np.delete(matice, i, 0), j, 1)
     determinant_vyskrtnuto = determinant.main(matice_vysrtnuto)
     return((-1)**(i+j)*determinant_vyskrtnuto)
@@ -33,9 +38,12 @@ def main(matice):
     """
     Pro zadanou matici / matici nactenou ze souboru file vrati adjungovanou matici.
     """
+    # kontrola, jestli byla zadana matice nebo soubor s matici
     if not isinstance(matice, np.ndarray):
         matice = nacti_matici(file)
+    # vytvoreni ,,prazdne formy" pro adjungovanou matici
     adjungovana_matice = np.empty(dtype="f", shape=[0, matice.shape[0]])
+    # naplneni adjungovane matice alg doplnky
     for i in np.arange(matice.shape[0]):
         radek = np.array([], dtype="f")
         for j in np.arange(matice.shape[0]):
@@ -45,11 +53,15 @@ def main(matice):
 
 def inverzni_z_adj(matice):
         """
-        Pro zadanou matici vrati inverzni matici vypoctenou pomoci adjungovane matice.
+        Pro zadanou matici vrati inverzni matici, vypoctenou pomoci adjungovane matice,
+        a matici adjungovanou.
+        Pokud zadana matice neni regularni, misto inverzni matice vrati 0.
         """
+        # kontrola, jestli byla zadana matice nebo soubor s matici
         if not isinstance(matice, np.ndarray):
             matice = nacti_matici(file)
         adjungovana_matice = main(matice)
+        # vypocet determinantu a kontrola, ze neni nulovy
         det = determinant.main(matice)
         if det != 0:
             inverzni_matice = adjungovana_matice/np.full(adjungovana_matice.shape[0], det)
