@@ -2,14 +2,6 @@ import numpy as np
 import sys
 from errors import *
 
-
-def swap_rows(array, row1, row2):
-    """
-    Funkce prohodi radky o indexech row1 a row2 v matici array.
-    """
-    array[[row1, row2]] = array[[row2, row1]]
-
-
 def get_nonzero_column(array, row_n, col_n, swap_count):
     """
     Funkce zkontroluje jestli na pozici array[row_n, col_n] je nenulove cislo,
@@ -21,7 +13,7 @@ def get_nonzero_column(array, row_n, col_n, swap_count):
     else:
         for i in np.arange(row_n+1, array.shape[0]):
             if array[i, col_n] != 0:
-                swap_rows(array, row_n, i)
+                array[[row_n, i]] = array[[i, row_n]]
                 swap_count+=1
                 return
         raise NeregularniMaticeError
