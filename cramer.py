@@ -9,14 +9,14 @@ def nacti_matici(file):
     byt oddeleny carkou. Zkontroluje tvar matice a vrati jako np array.)
     """
     try:
-        # nacteni matic ze souboru
+        # nacteni prvniho radku pro zjisteni rozmeru matice
         n = np.loadtxt(file, dtype='f', delimiter=',', max_rows=1).shape[0]
+        # nacteni matice a vektoru podle zjisteneho rozmeru n
         matice1 = np.loadtxt(file, dtype='f', delimiter=',', max_rows=n)
         vektor = np.loadtxt(file, dtype='f', delimiter=',', skiprows= n, max_rows=n)
 
         # kontrola rozmeru matice
         if matice1.shape[0] != matice1.shape[1]:
-            print("Matice nema pozadovany tvar.\n")
             raise ZadanySpatnyTvarError
         if vektor.shape[0] != n:
             raise ZadanySpatnyTvarError
@@ -27,6 +27,11 @@ def nacti_matici(file):
     return(matice1, vektor)
 
 def main(matice, vektor):
+    """
+    Vrati j-te reseni reseni rovnice Ax = b, kde A je zadana matice a b je zadany
+    vektor. Na index j se zepta v konzoli (prvni index := 1).
+    """
+    # zjistenni pozadovaneho indexu a kontrola platnosti
     while True:
         j = int(input("Zadejte pozadovanou slozku reseni rovnice Ax = b (prvni index := 1): "))
         if 0 <= j <= matice.shape[0]:
@@ -35,12 +40,13 @@ def main(matice, vektor):
         else:
             print("Zadana neplatna hodnota.")
 
+    #vytvoreni matice 2, ve ktere je nahrazen j-ty sloupce vektorem
     matice2 = np.copy(matice)
     matice2[:,j] = vektor
+    #vypocet determinantu puvoni matice a overeni nenulovosti
     det = determinant.main(matice)
     if det == 0:
         raise NeregularniMaticeError
-    print(det)
     return(determinant.main(matice2)/det)
 
 if __name__ == '__main__':
@@ -55,4 +61,5 @@ if __name__ == '__main__':
         except NeregularniMaticeError:
             print(f"Matice v souboru {file} neni regularni a soustava nema reseni.")
         except ZadanySpatnyTvarError:
-            pass
+            print("Matice/vektor nema pozadovany tvar.\n")
+            continue
