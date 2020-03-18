@@ -13,6 +13,7 @@ def get_nonzero_column(array, row_n, col_n, swap_count):
     else:
         for i in np.arange(row_n+1, array.shape[0]):
             if array[i, col_n] != 0:
+                #prohozeni radku
                 array[[row_n, i]] = array[[i, row_n]]
                 swap_count+=1
                 return
@@ -56,13 +57,13 @@ def main(matice):
         matice = nacti_matici(file)
     print(matice)
     swap_count = 0
+    # Pokusi se prevest matici do HST, pokud nejde -> matice singularni -> det = 0
     try:
         matice = preved_stupnovity_tvar(matice, swap_count)
     except NeregularniMaticeError:
         return 0
-    if isinstance(matice,int):
-        return("error")
     determinant = 1
+    # vynasobeni diagonalnich prvku = determinant
     for i in np.arange(0,matice.shape[0]):
         determinant*=matice[i,i]
     # změna znaménka za každé prohození radku
