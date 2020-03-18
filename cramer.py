@@ -3,6 +3,7 @@ import sys
 import determinant
 from errors import *
 
+
 def nacti_matici(file):
     """
     Funkce nacte matici ze souboru file (jednotlive členy matice na radku musi
@@ -13,7 +14,7 @@ def nacti_matici(file):
         n = np.loadtxt(file, dtype='f', delimiter=',', max_rows=1).shape[0]
         # nacteni matice a vektoru podle zjisteneho rozmeru n
         matice1 = np.loadtxt(file, dtype='f', delimiter=',', max_rows=n)
-        vektor = np.loadtxt(file, dtype='f', delimiter=',', skiprows= n, max_rows=n)
+        vektor = np.loadtxt(file, dtype='f', delimiter=',', skiprows=n, max_rows=n)
 
         # kontrola rozmeru matice
         if matice1.shape[0] != matice1.shape[1]:
@@ -26,6 +27,7 @@ def nacti_matici(file):
         exit()
     return(matice1, vektor)
 
+
 def main(matice, vektor):
     """
     Vrati j-te reseni reseni rovnice Ax = b, kde A je zadana matice a b je zadany
@@ -35,19 +37,20 @@ def main(matice, vektor):
     while True:
         j = int(input("Zadejte pozadovanou slozku reseni rovnice Ax = b (prvni index := 1): "))
         if 0 <= j <= matice.shape[0]:
-            j-=1
+            j -= 1
             break
         else:
             print("Zadana neplatna hodnota.")
 
-    #vytvoreni matice 2, ve ktere je nahrazen j-ty sloupce vektorem
+    # vytvoreni matice 2, ve ktere je nahrazen j-ty sloupce vektorem
     matice2 = np.copy(matice)
-    matice2[:,j] = vektor
-    #vypocet determinantu puvoni matice a overeni nenulovosti
+    matice2[:, j] = vektor
+    # vypocet determinantu puvoni matice a overeni nenulovosti
     det = determinant.main(matice)
     if det == 0:
         raise NeregularniMaticeError
     return(determinant.main(matice2)/det)
+
 
 if __name__ == '__main__':
     files = sys.argv[1:]

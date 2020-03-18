@@ -2,6 +2,7 @@ import numpy as np
 import sys
 from errors import *
 
+
 def get_nonzero_column(array, row_n, col_n, swap_count):
     """
     Funkce zkontroluje jestli na pozici array[row_n, col_n] je nenulove cislo,
@@ -13,11 +14,12 @@ def get_nonzero_column(array, row_n, col_n, swap_count):
     else:
         for i in np.arange(row_n+1, array.shape[0]):
             if array[i, col_n] != 0:
-                #prohozeni radku
+                # prohozeni radku
                 array[[row_n, i]] = array[[i, row_n]]
-                swap_count+=1
+                swap_count += 1
                 return
         raise NeregularniMaticeError
+
 
 def nacti_matici(file):
     """
@@ -38,6 +40,7 @@ def nacti_matici(file):
         exit()
     return(matice1)
 
+
 def preved_stupnovity_tvar(matice1, swap_count):
     """
     Prevede matici do horniho stupnoviteho tvaru.
@@ -48,6 +51,7 @@ def preved_stupnovity_tvar(matice1, swap_count):
         for j in np.arange(i+1, matice1.shape[0]):
             matice1[j] = matice1[j] - matice1[i]*matice1[j, i]/matice1[i, i]
     return matice1
+
 
 def main(matice):
     """
@@ -63,8 +67,8 @@ def main(matice):
         return 0
     determinant = 1
     # vynasobeni diagonalnich prvku = determinant
-    for i in np.arange(0,matice.shape[0]):
-        determinant*=matice[i,i]
+    for i in np.arange(0, matice.shape[0]):
+        determinant *= matice[i, i]
     # změna znaménka za každé prohození radku
     determinant = (-1)**(swap_count)*determinant
     return(determinant)
@@ -76,7 +80,7 @@ if __name__ == '__main__':
         files.append(input("Zadejte jméno souboru s maticemi (vcetne pripony): "))
     for file in files:
         determinant = main(file)
-        if isinstance(determinant,str):
+        if isinstance(determinant, str):
             print(f"Pri nacitani nebo zpracovani souboru {file} doslo k chybe.")
         else:
             print(f"Determinant matice v souboru {file} je: {determinant}.\n")
