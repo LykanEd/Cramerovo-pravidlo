@@ -17,9 +17,9 @@ def nacti_matici(file):
         # kontrola rozmeru matice
         if matice1.shape[0] != matice1.shape[1]:
             print("Matice nema pozadovany tvar.\n")
-            exit()
+            raise ZadanySpatnyTvarError
         if vektor.shape[0] != n:
-            print("Zadany vektor nema pozadovany tvar.")
+            raise ZadanySpatnyTvarError
     except:
         # pro pripad chybneho nacteni ze souboru
         print("Matice nema pozadovany tvar / byl zadan spatny soubor s matici.\n")
@@ -54,3 +54,5 @@ if __name__ == '__main__':
             print(f"Pozadovana slozka reseni je: {x_j}")
         except NeregularniMaticeError:
             print(f"Matice v souboru {file} neni regularni a soustava nema reseni.")
+        except ZadanySpatnyTvarError:
+            pass

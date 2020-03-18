@@ -1,6 +1,7 @@
 import numpy as np
 import sys
 import determinant
+from errors import *
 
 def nacti_matici(file):
     """
@@ -18,7 +19,7 @@ def nacti_matici(file):
     except:
         # pro pripad chybneho nacteni ze souboru
         print("Matice nema pozadovany tvar / byl zadan spatny soubor s matici.\n")
-        exit()
+        raise ZadanySpatnyTvarError
     return(matice1)
 
 def alg_doplnek(matice, i, j):
@@ -61,7 +62,10 @@ if __name__ == '__main__':
     if len(files) == 0:
         files.append(input("Zadejte jméno souboru s maticemi (vcetne pripony): "))
     for file in files:
-        inverzni_matice, adjungovana_matice = inverzni_z_adj(file)
+        try:
+            inverzni_matice, adjungovana_matice = inverzni_z_adj(file)
+        except ZadanySpatnyTvarError:
+            continue
         print(f"Adjungovana matice k matici v souboru {file}:")
         print(adjungovana_matice)
         if isinstance(inverzni_matice, int):
