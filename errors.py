@@ -3,5 +3,5 @@ class NeregularniMaticeError(Exception):
     pass
 
 class ZadanySpatnyTvarError(Exception):
-    """Vypocty pro regularni matici provadeny na singularni"""
+    """Matice v nacitanem souboru nemaji pozadovany tvar"""
     pass
