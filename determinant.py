@@ -55,7 +55,6 @@ def main(matice):
     """
     if not isinstance(matice, np.ndarray):
         matice = nacti_matici(file)
-    print(matice)
     swap_count = 0
     # Pokusi se prevest matici do HST, pokud nejde -> matice singularni -> det = 0
     try:
